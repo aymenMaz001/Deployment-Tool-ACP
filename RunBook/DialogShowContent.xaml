@@ -1,0 +1,173 @@
+﻿<UserControl x:Class="RunBook.DialogShowContent"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RunBook"
+             mc:Ignorable="d"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:controlzEx="urn:controlzex"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             HorizontalAlignment="Stretch"
+	        VerticalAlignment="Stretch"
+	        HorizontalContentAlignment="Stretch"
+	        VerticalContentAlignment="Stretch"
+            Height="auto"
+            Width="auto"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel>
+        <!--Add or Edit Content-->
+        <StackPanel Visibility="{Binding Path=IsFormVisible,Converter={local:BoolToVisibilityConverter FalseValue=Collapsed}}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="lblOperation" 
+                                        TextWrapping="Wrap" Text="Choose the type of operation:" Width="282" Margin="0,0,0,10" FontFamily="Calibri" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <ComboBox x:Name="cbOperation" Width="185" Margin="0,18,0,21" Height="31" FontFamily="Calibri" FontSize="14" ItemsSource="{Binding CbList}" SelectedValue="{Binding Action,Mode=TwoWay}" SelectedItem="{Binding Action,Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Margin="0,20" Orientation="Horizontal">
+                <Label x:Name="lblSite" Content="Site: " Height="34" Width="276" FontFamily="Calibri" FontSize="16" Margin="0,10,0,0"/>
+                <CheckBox IsChecked="True" Margin="0,0,20,0">Axe Credit Portal</CheckBox>
+                <CheckBox Margin="0,0,20,0">Acp Web Services</CheckBox>
+                <CheckBox Margin="0,0,20,0">Acp WorkFlow</CheckBox>
+                <CheckBox Margin="0,0,20,0">All</CheckBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,20">
+                <TextBlock Text="Server:" Width="280" FontFamily="Calibri" FontSize="16" />
+                <TextBox materialDesign:HintAssist.Hint="Server Adress" Name="txtServer" Grid.Row="0" Grid.Column="1" Width="165" Text="{Binding Server,Mode=TwoWay}">
+
+                    <behaviors:Interaction.Behaviors>
+                        <controlzEx:TextBoxInputMaskBehavior InputMask="999.999.999.999" PromptChar="_" />
+                    </behaviors:Interaction.Behaviors>
+                </TextBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,20">
+                <TextBlock Text="File:" Width="280" FontFamily="Calibri" FontSize="16" />
+                <TextBox materialDesign:HintAssist.Hint="File Path" Name="txtFile" IsReadOnly="True" Width="165" Text="{Binding Source}" />
+                <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="100" FontSize="12" Margin="50,0,0,0" Height="25">Browse</Button>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,20">
+                <TextBlock Text="Destination:" Width="280" FontFamily="Calibri" FontSize="16" />
+                <TextBox materialDesign:HintAssist.Hint="Destination Path"  Name="txtDestination" IsReadOnly="True" Width="165" Text="{Binding Destination}" />
+                <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="100" FontSize="12" Margin="50,0,0,0" Height="25">Browse</Button>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,20">
+                <TextBlock Text="Description:" Grid.Row="1" Grid.Column="0" Width="280" FontFamily="Calibri" FontSize="16" />
+                <TextBox TextWrapping="Wrap" VerticalAlignment="Stretch"
+                             MinWidth="200"
+                             MaxWidth="280"
+                             AcceptsReturn="True"
+                             VerticalScrollBarVisibility="Auto"
+                             SpellCheck.IsEnabled="True"
+                             materialDesign:HintAssist.Hint="Description"
+                             Text="{Binding Description,Mode=TwoWay}"
+                             Height="25" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,20,50,20" HorizontalAlignment="Right">
+                <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="100" FontSize="12" Margin="0" Height="25" Content="Add" Visibility="{Binding Path=IsBtnAddVisible,Converter={local:BoolToVisibilityConverter FalseValue=Collapsed}}" Command="{Binding AddEntry}" />
+                <Button Width="100" FontSize="12" Margin="0" Height="25" Content="Edit" Visibility="{Binding Path=IsBtnVisible,Converter={local:BoolToVisibilityConverter FalseValue=Collapsed}}" />
+                <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="100" FontSize="12" Margin="10" Height="25" Content="Close" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+            </StackPanel>
+        </StackPanel>
+        <!--Details Content-->
+        <StackPanel Visibility="{Binding Path=IsDetailsVisible,Converter={local:BoolToVisibilityConverter FalseValue=Collapsed}}">
+            <materialDesign:TransitioningContent OpeningEffectsOffset="{materialDesign:IndexedItemOffsetMultiplier 0:5:0}">
+                <materialDesign:TransitioningContent.OpeningEffects>
+                    <materialDesign:TransitionEffect Kind="FadeIn" />
+                    <materialDesign:TransitionEffect Kind="SlideInFromBottom" />
+                </materialDesign:TransitioningContent.OpeningEffects>
+                <StackPanel Margin="20">
+                    <StackPanel Orientation="Horizontal" Margin="20">
+                        <TextBlock Text="Action: " Width="280" FontFamily="Calibri" FontSize="16" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Action}">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Action}" Value="{x:Static local:RunBookViewModel.EmptyField}">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20">
+                        <TextBlock Text="Server: " Width="280" FontFamily="Calibri" FontSize="16" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Server}">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Server}" Value="{x:Static local:RunBookViewModel.EmptyField}">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20">
+                        <TextBlock Text="Source: " Width="280" FontFamily="Calibri" FontSize="16" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Source}">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Source}" Value="{x:Static local:RunBookViewModel.EmptyField}">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20">
+                        <TextBlock Text="Destination: " Width="280" FontFamily="Calibri" FontSize="16" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Destination}">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Destination}" Value="{x:Static local:RunBookViewModel.EmptyField}">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20">
+                        <TextBlock Text="Site: " Width="280" FontFamily="Calibri" FontSize="16" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Site}">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Site}" Value="{x:Static local:RunBookViewModel.EmptyField}">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20">
+                        <TextBlock Text="Description: " Width="280" FontFamily="Calibri" FontSize="16" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Description}">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Description}" Value="{x:Static local:RunBookViewModel.EmptyField}">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:TransitioningContent>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

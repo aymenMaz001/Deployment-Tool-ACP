@@ -1,0 +1,12 @@
+﻿<Application x:Class="Deployment_Tool.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TreeViewOpt"
+             StartupUri="MainWindow.xaml">
+            <!--StartupUri="/Views/FileSystemViewer.xaml">-->
+            <!--StartupUri="MainWindow.xaml">-->
+    
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>
