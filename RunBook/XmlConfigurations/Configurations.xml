@@ -53,7 +53,5 @@
       <Site />
     </MyData>
       </Configuration>
-    <Configuration name="Config 2" confId="2">
-    </Configuration>
    </Configurations>
 </ArrayOfMyData>

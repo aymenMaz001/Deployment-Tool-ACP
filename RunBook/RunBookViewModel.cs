@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -26,16 +27,20 @@ namespace RunBook
             //ListEntries.Add(new MyData() { Id = 4, Action = "Execute", Description = "Executing DB scripts", Destination = @"\Reports", Server = "192.168.2.152", Site = "", Source = "DocGen.docx",SourceFolderPath= @"\delivery*\01- DB\" });
             //ListEntries.Add(new MyData() { Id = 5, Action = "Execute", Description = "", Destination = "Axe_Credit", Server = "192.168.2.152", Site = "", Source = "DocGen.docx",SourceFolderPath="" });
             //LoadXmlConfig(@"C:\output.xml");
+            xmlFilePth = @"XmlConfigurations\Configurations.xml";
             ReadConfiguration(1);
             configurationListName();
             cbList.Add("StopIIS");
             cbList.Add("Copy");
-            cbList.Add("Execute");
-            cbList.Add("Execute");
+            cbList.Add("Execute Sql");
+            cbList.Add("Execute Cmd");
+            
 
         }
         // Write value if a field value is null or empty
         public static string EmptyField = "Empty Field";
+        //Xml File Path
+        private string xmlFilePth;
         //Variable to be bound with the view
         private int id;
         private string action;
@@ -79,8 +84,7 @@ namespace RunBook
 
             set
             {
-                listEntries = value;
-                
+                listEntries = value;        
                 OnPropertyChanged("ListEntries");
             }
         }
@@ -133,7 +137,7 @@ namespace RunBook
 
         private void ReadConfiguration(int id)
         {
-            var configFile = XDocument.Load(@"XmlConfigurations\Configurations.xml");
+            var configFile = XDocument.Load(xmlFilePth);
             var config = from data in configFile.Descendants("Configuration")
                          .Where(item => (int)item.Attribute("confId") == id)
                          .Descendants("MyData")
@@ -171,14 +175,14 @@ namespace RunBook
         /// <returns></returns>
         private int ConfigurationListCount()
         {
-            var configFile = XDocument.Load(@"XmlConfigurations\Configurations.xml");
+            var configFile = XDocument.Load(xmlFilePth);
             return configFile.Descendants("Configuration").Count();
             
         }
 
         private void configurationListName()
         {
-            var configFile = XDocument.Load(@"XmlConfigurations\Configurations.xml");
+            var configFile = XDocument.Load(xmlFilePth);
             var confList = from configurations in configFile.Descendants("Configuration")
             select new
             {
@@ -309,6 +313,38 @@ namespace RunBook
                     });
                 }
                 return deleteEntry;
+            }
+        }
+
+        private ICommand saveConfiguration;
+        public ICommand SaveConfiguration
+        {
+            get
+            {
+                if (saveConfiguration == null)
+                {
+                    saveConfiguration = new RelayCommand<object>((obj) =>
+                    {
+                        var configFile = XDocument.Load(xmlFilePth);
+                        var node = configFile.Descendants("Configurations").FirstOrDefault();
+                        var newConfiguration = new XElement("Configuration",new XAttribute("name","confg7"),new XAttribute("confId", "0"),
+                            new XElement("MyData",
+                                new XElement("Id",5),
+                                new XElement("Action","test"),
+                                new XElement("Server", "test"),
+                                new XElement("Source", "test"),
+                                new XElement("Destination", "test"),
+                                new XElement("Description", "test"),
+                                new XElement("SourceFolderPath", "test"),
+                                new XElement("Site", "test")
+                                )
+                            );
+                        node.Add(newConfiguration);
+                        node.Save(xmlFilePth);
+
+                    });
+                }
+                return saveConfiguration;
             }
         }
 

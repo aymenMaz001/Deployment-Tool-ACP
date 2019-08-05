@@ -119,6 +119,7 @@
                 
                 <StackPanel Orientation="Horizontal" Margin="0,20,50,20" HorizontalAlignment="Right">
                     <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding PersistToXml}" Width="100" FontSize="12" Margin="0" Height="25" Content="Next" />
+                    <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding SaveConfiguration}" Width="100" FontSize="12" Margin="0" Height="25" Content="Next" />
                 </StackPanel>
                 <!--If SystemFile is Selected-->
                 <!--<StackPanel Orientation="Horizontal" Margin="10,0,0,0">
