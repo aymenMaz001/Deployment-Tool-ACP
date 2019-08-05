@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace RunBook
@@ -19,27 +20,33 @@ namespace RunBook
     {
         public RunBookViewModel()
         {
-            ListEntries.Add(new MyData() { Id = 1, Action = "StopIIS", Description = "", Destination = "", Server = "192.168.2.152", Site = "All", Source = "" });
-            ListEntries.Add(new MyData() { Id = 2, Action = "Copy", Description = "", Destination = @"\Reports", Server = "192.168.2.152", Site = "AxeCreditPortal", Source = @"axeDispatchField.xml" });
-            ListEntries.Add(new MyData() { Id = 3, Action = "Copy", Description = "Copying formats to app server", Destination = @"\Axe_Credit", Server = "192.168.2.152", Site = "AcpWebServices", Source = "DocGen.docx" });
-            ListEntries.Add(new MyData() { Id = 4, Action = "Execute", Description = "Executing DB scripts", Destination = @"\Reports", Server = "192.168.2.152", Site = "", Source = "DocGen.docx" });
-            ListEntries.Add(new MyData() { Id = 5, Action = "Execute", Description = "", Destination = "Axe_Credit", Server = "192.168.2.152", Site = "", Source = "DocGen.docx" });
+            //ListEntries.Add(new MyData() { Id = 1, Action = "StopIIS", Description = "", Destination = "", Server = "192.168.2.152", Site = "All", Source = "", SourceFolderPath="" });
+            //ListEntries.Add(new MyData() { Id = 2, Action = "Copy", Description = "", Destination = @"\Reports", Server = "192.168.2.152", Site = "AxeCreditPortal", Source = @"axeDispatchField.xml", SourceFolderPath= @"\delivery*\00- Application\ACP\AxeConfig\" });
+            //ListEntries.Add(new MyData() { Id = 3, Action = "Copy", Description = "Copying formats to app server", Destination = @"\Axe_Credit", Server = "192.168.2.152", Site = "AcpWebServices", Source = "DocGen.docx",SourceFolderPath= @"\delivery*\00- Application\ACP\reports\" });
+            //ListEntries.Add(new MyData() { Id = 4, Action = "Execute", Description = "Executing DB scripts", Destination = @"\Reports", Server = "192.168.2.152", Site = "", Source = "DocGen.docx",SourceFolderPath= @"\delivery*\01- DB\" });
+            //ListEntries.Add(new MyData() { Id = 5, Action = "Execute", Description = "", Destination = "Axe_Credit", Server = "192.168.2.152", Site = "", Source = "DocGen.docx",SourceFolderPath="" });
             //LoadXmlConfig(@"C:\output.xml");
+            ReadConfiguration(1);
+            configurationListName();
             cbList.Add("StopIIS");
             cbList.Add("Copy");
             cbList.Add("Execute");
             cbList.Add("Execute");
 
         }
-        public static string EmptyField = "Empty Field"; // Write value if a field value is null or empty
+        // Write value if a field value is null or empty
+        public static string EmptyField = "Empty Field";
+        //Variable to be bound with the view
         private int id;
         private string action;
         private string server;
         private string source;
+        private string sourceFolderPath;
         private string destination;
         private string description;
         private string site;
         private MyData selectedAction;
+        //boolean variables to controls visibility
         private bool isBtnVisible;
         private bool isBtnAddVisible;
         private bool isDetailsVisible;
@@ -78,6 +85,21 @@ namespace RunBook
             }
         }
 
+        private ObservableCollection<string> listConfigurations = new ObservableCollection<string>();
+        public ObservableCollection<string> ListConfigurations
+        {
+            get
+            {
+                return listConfigurations;
+            }
+
+            set
+            {
+                listConfigurations = value;
+                OnPropertyChanged("ListConfigurations");
+            }
+        }
+
 
         /// <summary>
         /// Method to update automatically the id column
@@ -109,6 +131,65 @@ namespace RunBook
             ReadFileStream.Close();
         }
 
+        private void ReadConfiguration(int id)
+        {
+            var configFile = XDocument.Load(@"XmlConfigurations\Configurations.xml");
+            var config = from data in configFile.Descendants("Configuration")
+                         .Where(item => (int)item.Attribute("confId") == id)
+                         .Descendants("MyData")
+                          select new
+                          {
+                              XmlId = data.Element("Id")?.Value,
+                              XmlAction = data.Element("Action")?.Value,
+                              XmlServer = data.Element("Server")?.Value,
+                              XmlSource = data.Element("Source")?.Value,
+                              XmlDestination = data.Element("Destination")?.Value,
+                              XmlSourceFolderPath = data.Element("SourceFolderPath")?.Value,
+                              XmlDescription = data.Element("Description")?.Value,
+                              XmlSite = data.Element("Site")?.Value
+                          };
+
+            foreach (var item in config)
+            {
+                var dataConfig = new MyData(){
+                    Action = item.XmlAction,
+                    Description = item.XmlDescription,
+                    Destination = item.XmlDestination,
+                    Server = item.XmlServer,
+                    Site = item.XmlSite,
+                    Source = item.XmlSource,
+                    SourceFolderPath = item.XmlSourceFolderPath,
+                    Id = Convert.ToInt32(item.XmlId)
+                };
+                listEntries.Add(dataConfig);
+            }
+        }
+
+        /// <summary>
+        /// Return the number of saved configurations
+        /// </summary>
+        /// <returns></returns>
+        private int ConfigurationListCount()
+        {
+            var configFile = XDocument.Load(@"XmlConfigurations\Configurations.xml");
+            return configFile.Descendants("Configuration").Count();
+            
+        }
+
+        private void configurationListName()
+        {
+            var configFile = XDocument.Load(@"XmlConfigurations\Configurations.xml");
+            var confList = from configurations in configFile.Descendants("Configuration")
+            select new
+            {
+                Name = configurations.Attribute("name")?.Value
+            };
+            foreach (var item in confList)
+            {
+                ListConfigurations.Add(item.Name);
+            }
+
+        }
         private ICommand addEntry;
         public ICommand AddEntry
         {
@@ -118,7 +199,7 @@ namespace RunBook
                 {
                     addEntry = new RelayCommand<object>((obj) =>
                     {
-                        ListEntries.Add(new MyData() { Id = Id, Action = Action, Description = Description, Destination = Destination, Server = Server, Site = Site, Source = Source });
+                        ListEntries.Add(new MyData() { Id = Id, Action = Action, Description = Description, Destination = Destination, Server = Server, Site = Site, Source = Source,SourceFolderPath=SourceFolderPath });
                         IsOpenDialog = false;
 
 
@@ -147,6 +228,7 @@ namespace RunBook
                         Source = string.IsNullOrEmpty(SelectedAction.Source) ? ("Empty Field") : SelectedAction.Source;
                         Destination = string.IsNullOrEmpty(SelectedAction.Destination) ? ("Empty Field") : SelectedAction.Destination;
                         Description = string.IsNullOrEmpty(SelectedAction.Description) ? ("Empty Field") : SelectedAction.Description;
+                        SourceFolderPath = string.IsNullOrEmpty(SelectedAction.SourceFolderPath) ? ("Empty Field") : SelectedAction.SourceFolderPath;
                         Site = string.IsNullOrEmpty(SelectedAction.Site) ? ("Empty Field") : SelectedAction.Site;
                         
                     });
@@ -176,6 +258,7 @@ namespace RunBook
                         Source = "";
                         Destination = "";
                         Description = "";
+                        SourceFolderPath = "";
                     });
                 }
                 return openAddDialog;
@@ -203,6 +286,7 @@ namespace RunBook
                         Description = SelectedAction.Description;
                         Source = SelectedAction.Source;
                         Destination = SelectedAction.Destination;
+                        SourceFolderPath = SelectedAction.SourceFolderPath;
 
                     });
                 }
@@ -274,6 +358,41 @@ namespace RunBook
                     });
                 }
                         return readXmlFile;
+            }
+        }
+
+        private ICommand getSourceFilePath;
+        public ICommand GetSourceFilePath
+        {
+            get
+            {
+                if (getSourceFilePath == null)
+                {
+                    getSourceFilePath = new RelayCommand<object>((obj) =>
+                    {
+                        var getSourceFilePath = new OpenFileDialog();
+                        getSourceFilePath.ShowDialog();
+                        Source = getSourceFilePath.FileName;
+                        SourceFolderPath = Path.GetDirectoryName(Source);
+                    });
+                }
+                return getSourceFilePath;
+            }
+        }
+        private ICommand getDestinationFilePath;
+        public ICommand GetDestinationFilePath
+        {
+            get
+            {
+                if (getDestinationFilePath == null)
+                {
+                    getDestinationFilePath = new RelayCommand<object>((obj) =>
+                    {
+                        var destinationFilePath = new OpenFileDialog();
+                        destinationFilePath.ShowDialog();
+                    });
+                }
+                return getDestinationFilePath;
             }
         }
 
@@ -372,6 +491,20 @@ namespace RunBook
             {
                 site = value;
                 OnPropertyChanged("Site");
+            }
+        }
+
+        public string SourceFolderPath
+        {
+            get
+            {
+                return sourceFolderPath;
+            }
+
+            set
+            {
+                sourceFolderPath = value;
+                OnPropertyChanged("SourceFolderPath");
             }
         }
 

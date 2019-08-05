@@ -20,7 +20,7 @@
             Width="auto"
             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
              d:DesignWidth="770">
-    <!--dialog -->
+    
     <Grid Margin="0,0,-130,-160">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -28,20 +28,23 @@
         <Border Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1" HorizontalAlignment="Left" Margin="0,1,0,-116" Width="900">
             <StackPanel>
                 <materialDesign:DialogHost CloseOnClickAway="True" IsOpen="{Binding IsOpenDialog}" Height="568" Width="754" Margin="72,0">
+                    <!--dialog Content-->
                     <materialDesign:DialogHost.DialogContent>
                         <local:DialogShowContent />
                     </materialDesign:DialogHost.DialogContent>
                     <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0" Height="138">
-                            <Label x:Name="lblAction" Content="Action: " Height="34" Width="282" FontFamily="Calibri" FontSize="16"/>
-                            <ComboBox x:Name="cbAction" Width="185" Margin="0,18,0,21" Height="31" FontFamily="Calibri" FontSize="14">
-                                <ComboBoxItem IsSelected="True">Upgrade Version</ComboBoxItem>
-                                <ComboBoxItem>Add a New Site</ComboBoxItem>
-                            </ComboBox>
-                            <!--Upload Config Button-->
-                            <Button Command="{Binding ReadXmlFile}" HorizontalAlignment="Left" Margin="80,0,30,0" BorderThickness="0">
-                                <materialDesign:PackIcon Kind="Upload" Height="22" Width="22"/>
-                            </Button>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                                <Label x:Name="lblAction" Content="Action: " Height="34" Width="282" FontFamily="Calibri" FontSize="16"/>
+                                <ComboBox x:Name="cbAction" Width="185" Margin="0,18,0,21" Height="31" FontFamily="Calibri" FontSize="14">
+                                    <ComboBoxItem IsSelected="True">Upgrade Version</ComboBoxItem>
+                                    <ComboBoxItem>Add a New Site</ComboBoxItem>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                                <Label x:Name="lblConfig" Content="Configuration: " Height="34" Width="282" FontFamily="Calibri" FontSize="16"/>
+                                <ComboBox x:Name="cbConfiguration" Width="185" Margin="0,18,0,21" Height="31" FontFamily="Calibri" FontSize="14" ItemsSource="{Binding ListConfigurations}" />
+                            </StackPanel>
                         </StackPanel>
                         <StackPanel>
                             <DataGrid x:Name="actionsList"

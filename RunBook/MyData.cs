@@ -97,6 +97,21 @@ namespace RunBook
             }
         }
 
+        private string sourceFolderPath;
+
+        public string SourceFolderPath
+        {
+            get
+            {
+                return sourceFolderPath;
+            }
+
+            set
+            {
+                sourceFolderPath = value;
+                OnPropertyChanged("SourceFolderPath");
+            }
+        }
         public string Site { get; set; }
     }
 }

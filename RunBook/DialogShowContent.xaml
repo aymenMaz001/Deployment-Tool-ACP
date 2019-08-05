@@ -46,13 +46,13 @@
             <StackPanel Orientation="Horizontal" Margin="0,20">
                 <TextBlock Text="File:" Width="280" FontFamily="Calibri" FontSize="16" />
                 <TextBox materialDesign:HintAssist.Hint="File Path" Name="txtFile" IsReadOnly="True" Width="165" Text="{Binding Source}" />
-                <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="100" FontSize="12" Margin="50,0,0,0" Height="25">Browse</Button>
+                <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="100" FontSize="12" Margin="50,0,0,0" Height="25" Command="{Binding GetSourceFilePath}">Browse</Button>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,20">
                 <TextBlock Text="Destination:" Width="280" FontFamily="Calibri" FontSize="16" />
                 <TextBox materialDesign:HintAssist.Hint="Destination Path"  Name="txtDestination" IsReadOnly="True" Width="165" Text="{Binding Destination}" />
-                <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="100" FontSize="12" Margin="50,0,0,0" Height="25">Browse</Button>
+                <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="100" FontSize="12" Margin="50,0,0,0" Height="25" Command="{Binding GetDestinationFilePath}">Browse</Button>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,20">
@@ -111,7 +111,21 @@
                         </TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="20">
-                        <TextBlock Text="Source: " Width="280" FontFamily="Calibri" FontSize="16" FontWeight="Bold" />
+                        <TextBlock Text="Source Folder: " Width="280" FontFamily="Calibri" FontSize="16" FontWeight="Bold" />
+                        <TextBlock Text="{Binding SourceFolderPath}">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SourceFolderPath}" Value="{x:Static local:RunBookViewModel.EmptyField}">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20">
+                        <TextBlock Text="Source File: " Width="280" FontFamily="Calibri" FontSize="16" FontWeight="Bold" />
                         <TextBlock Text="{Binding Source}">
                             <TextBlock.Style>
                                 <Style TargetType="{x:Type TextBlock}">

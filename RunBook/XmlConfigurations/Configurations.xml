@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfMyData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Configurations>
+    <Configuration name="Default Config" confId="1">
+      <MyData>
+      <Id>1</Id>
+      <Action>StopIIS</Action>
+      <Server>192.168.2.152</Server>
+      <Source />
+      <Destination />
+      <Description />
+      <SourceFolderPath />
+      <Site>All</Site>
+    </MyData>
+    <MyData>
+      <Id>2</Id>
+      <Action>Copy</Action>
+      <Server>192.168.2.152</Server>
+      <Source>axeDispatchField.xml</Source>
+      <Destination>\Reports</Destination>
+      <Description />
+      <SourceFolderPath>\delivery*\00- Application\ACP\AxeConfig\</SourceFolderPath>
+      <Site>AxeCreditPortal</Site>
+    </MyData>
+    <MyData>
+      <Id>3</Id>
+      <Action>Copy</Action>
+      <Server>192.168.2.152</Server>
+      <Source>DocGen.docx</Source>
+      <Destination>\Axe_Credit</Destination>
+      <Description>Copying formats to app server</Description>
+      <SourceFolderPath>\delivery*\00- Application\ACP\reports\</SourceFolderPath>
+      <Site>AcpWebServices</Site>
+    </MyData>
+    <MyData>
+      <Id>4</Id>
+      <Action>Execute</Action>
+      <Server>192.168.2.152</Server>
+      <Source>DocGen.docx</Source>
+      <Destination>\Reports</Destination>
+      <Description>Executing DB scripts</Description>
+      <SourceFolderPath>\delivery*\01- DB\</SourceFolderPath>
+      <Site />
+    </MyData>
+    <MyData>
+      <Id>5</Id>
+      <Action>Execute</Action>
+      <Server>192.168.2.152</Server>
+      <Source>DocGen.docx</Source>
+      <Destination>Axe_Credit</Destination>
+      <Description />
+      <SourceFolderPath />
+      <Site />
+    </MyData>
+      </Configuration>
+    <Configuration name="Config 2" confId="2">
+    </Configuration>
+   </Configurations>
+</ArrayOfMyData>
