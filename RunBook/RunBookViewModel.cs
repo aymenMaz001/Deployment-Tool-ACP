@@ -21,21 +21,22 @@ namespace RunBook
     {
         public RunBookViewModel()
         {
-            //ListEntries.Add(new MyData() { Id = 1, Action = "StopIIS", Description = "", Destination = "", Server = "192.168.2.152", Site = "All", Source = "", SourceFolderPath="" });
-            //ListEntries.Add(new MyData() { Id = 2, Action = "Copy", Description = "", Destination = @"\Reports", Server = "192.168.2.152", Site = "AxeCreditPortal", Source = @"axeDispatchField.xml", SourceFolderPath= @"\delivery*\00- Application\ACP\AxeConfig\" });
-            //ListEntries.Add(new MyData() { Id = 3, Action = "Copy", Description = "Copying formats to app server", Destination = @"\Axe_Credit", Server = "192.168.2.152", Site = "AcpWebServices", Source = "DocGen.docx",SourceFolderPath= @"\delivery*\00- Application\ACP\reports\" });
-            //ListEntries.Add(new MyData() { Id = 4, Action = "Execute", Description = "Executing DB scripts", Destination = @"\Reports", Server = "192.168.2.152", Site = "", Source = "DocGen.docx",SourceFolderPath= @"\delivery*\01- DB\" });
-            //ListEntries.Add(new MyData() { Id = 5, Action = "Execute", Description = "", Destination = "Axe_Credit", Server = "192.168.2.152", Site = "", Source = "DocGen.docx",SourceFolderPath="" });
-            //LoadXmlConfig(@"C:\output.xml");
+            
+            //modifiy original file
+            //xmlFilePth = @"..\..\XmlConfigurations\Configurations.xml";
+            //Modify file in debug
             xmlFilePth = @"XmlConfigurations\Configurations.xml";
-            ReadConfiguration(1);
-            configurationListName();
+            //ReadConfiguration("1");
+            //string gg = new Guid("0a75af84-f689-4291-8921-4d5e5e6158ae").ToString("D");
+            ReadConfiguration("5");
+            ListConfigurations = configurationListName();
             cbList.Add("StopIIS");
             cbList.Add("Copy");
             cbList.Add("Execute Sql");
             cbList.Add("Execute Cmd");
+            //Default selected configuration
+            SelectedConfiguration = ListConfigurations[0];
             
-
         }
         // Write value if a field value is null or empty
         public static string EmptyField = "Empty Field";
@@ -51,11 +52,14 @@ namespace RunBook
         private string description;
         private string site;
         private MyData selectedAction;
+        private string selectedConfiguration;
+        private string newConfigurationName;
         //boolean variables to controls visibility
         private bool isBtnVisible;
         private bool isBtnAddVisible;
         private bool isDetailsVisible;
         private bool isFormVisible;
+        private bool isSaveNameVisible;
 
         private ObservableCollection<string> cbList = new ObservableCollection<string>();
         public ObservableCollection<string> CbList
@@ -104,96 +108,6 @@ namespace RunBook
             }
         }
 
-
-        /// <summary>
-        /// Method to update automatically the id column
-        /// </summary>
-        private void UpdateIdList()
-        {
-            var i = 0;
-            foreach (var item in ListEntries)
-            {
-                item.Id = ++i;
-            }
-        }
-
-        /// <summary>
-        /// Method to load the configuration file from
-        /// an XML file and bind it to the datagrid
-        /// </summary>
-        /// <param name="path"></param>
-        private void LoadXmlConfig(string path)
-        {
-            XmlSerializer serialiser = new XmlSerializer(ListEntries.GetType());
-            // Create a new file stream for reading the XML file
-            FileStream ReadFileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-
-            // Load the object saved above by using the Deserialize function
-            var LoadedConfig = (ObservableCollection<MyData>)serialiser.Deserialize(ReadFileStream);
-            ListEntries = LoadedConfig;
-            // Cleanup
-            ReadFileStream.Close();
-        }
-
-        private void ReadConfiguration(int id)
-        {
-            var configFile = XDocument.Load(xmlFilePth);
-            var config = from data in configFile.Descendants("Configuration")
-                         .Where(item => (int)item.Attribute("confId") == id)
-                         .Descendants("MyData")
-                          select new
-                          {
-                              XmlId = data.Element("Id")?.Value,
-                              XmlAction = data.Element("Action")?.Value,
-                              XmlServer = data.Element("Server")?.Value,
-                              XmlSource = data.Element("Source")?.Value,
-                              XmlDestination = data.Element("Destination")?.Value,
-                              XmlSourceFolderPath = data.Element("SourceFolderPath")?.Value,
-                              XmlDescription = data.Element("Description")?.Value,
-                              XmlSite = data.Element("Site")?.Value
-                          };
-
-            foreach (var item in config)
-            {
-                var dataConfig = new MyData(){
-                    Action = item.XmlAction,
-                    Description = item.XmlDescription,
-                    Destination = item.XmlDestination,
-                    Server = item.XmlServer,
-                    Site = item.XmlSite,
-                    Source = item.XmlSource,
-                    SourceFolderPath = item.XmlSourceFolderPath,
-                    Id = Convert.ToInt32(item.XmlId)
-                };
-                listEntries.Add(dataConfig);
-            }
-        }
-
-        /// <summary>
-        /// Return the number of saved configurations
-        /// </summary>
-        /// <returns></returns>
-        private int ConfigurationListCount()
-        {
-            var configFile = XDocument.Load(xmlFilePth);
-            return configFile.Descendants("Configuration").Count();
-            
-        }
-
-        private void configurationListName()
-        {
-            var configFile = XDocument.Load(xmlFilePth);
-            var confList = from configurations in configFile.Descendants("Configuration")
-            select new
-            {
-                Name = configurations.Attribute("name")?.Value
-            };
-            foreach (var item in confList)
-            {
-                ListConfigurations.Add(item.Name);
-            }
-
-        }
         private ICommand addEntry;
         public ICommand AddEntry
         {
@@ -226,6 +140,7 @@ namespace RunBook
                         IsOpenDialog = true;
                         IsDetailsVisible = true;
                         IsFormVisible = false;
+                        IsSaveNameVisible = false;
 
                         Action = string.IsNullOrEmpty(SelectedAction.Action) ? ("Empty Field") : SelectedAction.Action;
                         Server = string.IsNullOrEmpty(SelectedAction.Server) ? ("Empty Field") : SelectedAction.Server;
@@ -255,6 +170,7 @@ namespace RunBook
                         IsBtnVisible = false;
                         IsDetailsVisible = false;
                         IsFormVisible = true;
+                        IsSaveNameVisible = false;
 
 
                         Action = "";
@@ -284,6 +200,7 @@ namespace RunBook
                         IsBtnVisible = true;
                         IsFormVisible = true;
                         IsDetailsVisible = false;
+                        IsSaveNameVisible = false;
 
                         Action =  SelectedAction.Action;
                         Server = SelectedAction.Server;
@@ -316,6 +233,9 @@ namespace RunBook
             }
         }
 
+        /// <summary>
+        /// Generate an XML Configuration from the datagrid data
+        /// </summary>
         private ICommand saveConfiguration;
         public ICommand SaveConfiguration
         {
@@ -325,77 +245,114 @@ namespace RunBook
                 {
                     saveConfiguration = new RelayCommand<object>((obj) =>
                     {
-                        var configFile = XDocument.Load(xmlFilePth);
-                        var node = configFile.Descendants("Configurations").FirstOrDefault();
-                        var newConfiguration = new XElement("Configuration",new XAttribute("name","confg7"),new XAttribute("confId", "0"),
-                            new XElement("MyData",
-                                new XElement("Id",5),
-                                new XElement("Action","test"),
-                                new XElement("Server", "test"),
-                                new XElement("Source", "test"),
-                                new XElement("Destination", "test"),
-                                new XElement("Description", "test"),
-                                new XElement("SourceFolderPath", "test"),
-                                new XElement("Site", "test")
-                                )
-                            );
-                        node.Add(newConfiguration);
-                        node.Save(xmlFilePth);
+                        var configurationFile = XDocument.Load(xmlFilePth);
+                        var rootConfigurations = configurationFile.Descendants("Configurations").FirstOrDefault();
+                        var newConfigurationNode = new XElement("Configuration");
+                        var newMydataNode = new XElement("Mydata");
+                        newConfigurationNode.Add(new XAttribute("name", NewConfigurationName));
+                        newConfigurationNode.Add(new XAttribute("confId",  Guid.NewGuid()));
+                        foreach (var node in ListEntries)
+                        {
+                            var newIdNode = new XElement("Id", node.Id);
+                            var newActionNode = new XElement("Action", node.Action);
+                            var newServerNode = new XElement("Server", node.Server);
+                            var newSourceNode = new XElement("Source", node.Source);
+                            var newDestinationNode = new XElement("Destination", node.Destination);
+                            var newDescriptionNode = new XElement("Description", node.Description);
+                            var newSourceFolderPathNode = new XElement("SourceFolderPath", node.SourceFolderPath);
+                            var newSiteNode = new XElement("Site", node.Site);
+                            newMydataNode.Add(newIdNode);
+                            newMydataNode.Add(newActionNode);
+                            newMydataNode.Add(newServerNode);
+                            newMydataNode.Add(newSourceNode);
+                            newMydataNode.Add(newDestinationNode);
+                            newMydataNode.Add(newDescriptionNode);
+                            newMydataNode.Add(newSourceFolderPathNode);
+                            newMydataNode.Add(newSiteNode);
+                        }
+                        newConfigurationNode.Add(newMydataNode);
+                        rootConfigurations.Add(newConfigurationNode);
+                        rootConfigurations.Save(xmlFilePth);
 
+                        //Arrange the view
+                        ListConfigurations.Clear();
+                        ListConfigurations = configurationListName();
+                        SelectedConfiguration = ListConfigurations.Last();
+                        IsOpenDialog = false;
+                        IsSaveNameVisible = false;
                     });
                 }
                 return saveConfiguration;
             }
         }
 
-        private ICommand persistToXml;
-
-        public ICommand PersistToXml
+        private ICommand openSaveDialog;
+        public ICommand OpenSaveDialog
         {
             get
             {
-                if (persistToXml == null)
+                if (openSaveDialog == null)
                 {
-                    persistToXml = new RelayCommand<object>((obj) =>
+                    openSaveDialog = new RelayCommand<object>((obj) =>
                     {
-                        SaveFileDialog saveFileDialog = new SaveFileDialog();
-                        saveFileDialog.Filter = "XML File (*.xml) | *.xml";
-                        saveFileDialog.DefaultExt = "xml";
-                        if (saveFileDialog.ShowDialog() == true)
-                        {
-                            XmlSerializer serialiser = new XmlSerializer(ListEntries.GetType());
-                            TextWriter Filestream = new StreamWriter(saveFileDialog.FileName);
-                            //write to the file
-                            serialiser.Serialize(Filestream, ListEntries);
-                            // Close the file
-                            Filestream.Close();
-                        }
-
-
+                        IsOpenDialog = true;
+                        IsSaveNameVisible = true;
+                        IsFormVisible = false;
+                        isDetailsVisible = false; 
                     });
+                }
+            return openSaveDialog;
+            }
+        }
+
+        //private ICommand persistToXml;
+
+        //public ICommand PersistToXml
+        //{
+        //    get
+        //    {
+        //        if (persistToXml == null)
+        //        {
+        //            persistToXml = new RelayCommand<object>((obj) =>
+        //            {
+        //                SaveFileDialog saveFileDialog = new SaveFileDialog();
+        //                saveFileDialog.Filter = "XML File (*.xml) | *.xml";
+        //                saveFileDialog.DefaultExt = "xml";
+        //                if (saveFileDialog.ShowDialog() == true)
+        //                {
+        //                    XmlSerializer serialiser = new XmlSerializer(ListEntries.GetType());
+        //                    TextWriter Filestream = new StreamWriter(saveFileDialog.FileName);
+        //                    //write to the file
+        //                    serialiser.Serialize(Filestream, ListEntries);
+        //                    // Close the file
+        //                    Filestream.Close();
+        //                }
+
+
+        //            });
                     
-                }
-                return persistToXml;
-            }
-        }
+        //        }
+        //        return persistToXml;
+        //    }
+        //}
 
-        private ICommand readXmlFile;
-        public ICommand ReadXmlFile
-        {
-            get
-            {
-                if (readXmlFile == null)
-                {
-                    readXmlFile = new RelayCommand<object>((obj) =>
-                    {
-                        var uploadConfigXml = new OpenFileDialog();
-                        uploadConfigXml.Filter = "XML Files (*.xml)|*.xml";
-                        uploadConfigXml.ShowDialog();
-                    });
-                }
-                        return readXmlFile;
-            }
-        }
+        //private ICommand readXmlFile;
+        //public ICommand ReadXmlFile
+        //{
+        //    get
+        //    {
+        //        if (readXmlFile == null)
+        //        {
+        //            readXmlFile = new RelayCommand<object>((obj) =>
+        //            {
+        //                var uploadConfigXml = new OpenFileDialog();
+        //                uploadConfigXml.Filter = "XML Files (*.xml)|*.xml";
+        //                uploadConfigXml.ShowDialog();
+        //            });
+        //        }
+        //                return readXmlFile;
+        //    }
+        //}
 
         private ICommand getSourceFilePath;
         public ICommand GetSourceFilePath
@@ -631,5 +588,157 @@ namespace RunBook
                 OnPropertyChanged("IsFormVisible");
             }
         }
+
+        public bool IsSaveNameVisible
+        {
+            get
+            {
+                return isSaveNameVisible;
+            }
+
+            set
+            {
+                isSaveNameVisible = value;
+                OnPropertyChanged("IsSaveNameVisible");
+            }
+        }
+
+        public string NewConfigurationName
+        {
+            get
+            {
+                return newConfigurationName;
+            }
+
+            set
+            {
+                newConfigurationName = value;
+                OnPropertyChanged("NewConfigurationName");
+            }
+        }
+
+        public string SelectedConfiguration
+        {
+            get
+            {
+                //if (selectedConfiguration != null)
+                //{
+                //    ReadConfiguration("9c1c11ab-e0f4-4662-b38e-c52c7fe6df82");
+                //}
+                return selectedConfiguration;
+            }
+
+            set
+            {
+                selectedConfiguration = value;
+                OnPropertyChanged("SelectedConfiguration");
+            }
+        }
+
+        ///########################################
+        ///########################################
+        ///######## Methods internally used #######
+        ///########################################
+        ///########################################
+
+        /// <summary>
+        /// Method to update automatically the id column
+        /// </summary>
+        private void UpdateIdList()
+        {
+            var i = 0;
+            foreach (var item in ListEntries)
+            {
+                item.Id = ++i;
+            }
+        }
+
+        ///// <summary>
+        ///// Method to load the configuration file from
+        ///// an XML file and bind it to the datagrid
+        ///// </summary>
+        ///// <param name="path"></param>
+        //private void LoadXmlConfig(string path)
+        //{
+        //    XmlSerializer serialiser = new XmlSerializer(ListEntries.GetType());
+        //    // Create a new file stream for reading the XML file
+        //    FileStream ReadFileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+        //    // Load the object saved above by using the Deserialize function
+        //    var LoadedConfig = (ObservableCollection<MyData>)serialiser.Deserialize(ReadFileStream);
+        //    ListEntries = LoadedConfig;
+        //    // Cleanup
+        //    ReadFileStream.Close();
+        //}
+
+
+        /// <summary>
+        /// Read a configuration from the XML Configuration File
+        /// based on the given id
+        /// </summary>
+        /// <param name="id">id of the configuration</param>
+        private void ReadConfiguration(string id)
+        {
+            var configFile = XDocument.Load(xmlFilePth);
+            var config = from data in configFile.Descendants("Configuration")
+                         .Where(item => (string)item.Attribute("confId") == id)
+                         .Descendants("MyData")
+                         select new
+                         {
+                             XmlId = data.Element("Id")?.Value,
+                             XmlAction = data.Element("Action")?.Value,
+                             XmlServer = data.Element("Server")?.Value,
+                             XmlSource = data.Element("Source")?.Value,
+                             XmlDestination = data.Element("Destination")?.Value,
+                             XmlSourceFolderPath = data.Element("SourceFolderPath")?.Value,
+                             XmlDescription = data.Element("Description")?.Value,
+                             XmlSite = data.Element("Site")?.Value
+                         };
+            foreach (var item in config)
+            {
+                var dataConfig = new MyData()
+                {
+                    Action = item.XmlAction,
+                    Description = item.XmlDescription,
+                    Destination = item.XmlDestination,
+                    Server = item.XmlServer,
+                    Site = item.XmlSite,
+                    Source = item.XmlSource,
+                    SourceFolderPath = item.XmlSourceFolderPath,
+                    Id = Convert.ToInt32(item.XmlId)
+                };
+                ListEntries.Add(dataConfig);
+            }
+        }
+
+        /// <summary>
+        /// Return the number of saved configurations
+        /// </summary>
+        /// <returns></returns>
+        private int ConfigurationListCount()
+        {
+            var configFile = XDocument.Load(xmlFilePth);
+            return configFile.Descendants("Configuration").Count();
+
+        }
+
+        /// <summary>
+        /// Read Configurations name to bind with the comboBox
+        /// </summary>
+        private ObservableCollection<string> configurationListName()
+        {
+            var configFile = XDocument.Load(xmlFilePth);
+            var confList = from configurations in configFile.Descendants("Configuration")
+                           select new
+                           {
+                               Name = configurations.Attribute("name")?.Value
+                           };
+            foreach (var item in confList)
+            {
+                ListConfigurations.Add(item.Name);
+            }
+            return listConfigurations;
+        }
+
     }
 }

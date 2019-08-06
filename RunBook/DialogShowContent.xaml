@@ -183,5 +183,13 @@
                 </StackPanel>
             </materialDesign:TransitioningContent>
         </StackPanel>
+        <!--Save Name Conent-->
+        <StackPanel Visibility="{Binding Path=IsSaveNameVisible,Converter={local:BoolToVisibilityConverter FalseValue=Collapsed}}">
+            <StackPanel Margin="20">
+                <TextBlock Text="Save new Configuration :" Width="280" FontFamily="Calibri" FontSize="16" FontWeight="Bold" />
+                <TextBox materialDesign:HintAssist.Hint="Configuration Name" Width="165" Text="{Binding NewConfigurationName}" />
+                <Button Content="Save" Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="100" FontSize="12" Margin="10" Height="25" Command="{Binding SaveConfiguration}" />
+            </StackPanel>
+        </StackPanel>
     </StackPanel>
 </UserControl>

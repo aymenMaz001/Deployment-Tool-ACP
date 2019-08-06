@@ -43,7 +43,11 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                                 <Label x:Name="lblConfig" Content="Configuration: " Height="34" Width="282" FontFamily="Calibri" FontSize="16"/>
-                                <ComboBox x:Name="cbConfiguration" Width="185" Margin="0,18,0,21" Height="31" FontFamily="Calibri" FontSize="14" ItemsSource="{Binding ListConfigurations}" />
+                                <ComboBox x:Name="cbConfiguration" Width="185" Margin="0,18,0,21" 
+                                          Height="31" FontFamily="Calibri" FontSize="14" 
+                                          ItemsSource="{Binding ListConfigurations,Mode=TwoWay}"
+                                          SelectedItem="{Binding SelectedConfiguration}"
+                                           />
                             </StackPanel>
                         </StackPanel>
                         <StackPanel>
@@ -118,8 +122,9 @@
                 </materialDesign:DialogHost>
                 
                 <StackPanel Orientation="Horizontal" Margin="0,20,50,20" HorizontalAlignment="Right">
-                    <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding PersistToXml}" Width="100" FontSize="12" Margin="0" Height="25" Content="Next" />
-                    <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding SaveConfiguration}" Width="100" FontSize="12" Margin="0" Height="25" Content="Next" />
+                    <!--<Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding PersistToXml}" Width="100" FontSize="12" Margin="0" Height="25" Content="Next" />-->
+                    <!--<Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding SaveConfiguration}" Width="100" FontSize="12" Margin="0" Height="25" Content="Save New Configuration" />-->
+                    <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding OpenSaveDialog}" Width="170" FontSize="12" Margin="0" Height="25" Content="Save New Configuration" />
                 </StackPanel>
                 <!--If SystemFile is Selected-->
                 <!--<StackPanel Orientation="Horizontal" Margin="10,0,0,0">
