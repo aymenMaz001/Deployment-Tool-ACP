@@ -27,8 +27,9 @@ namespace RunBook
             //Modify file in debug
             xmlFilePth = @"XmlConfigurations\Configurations.xml";
             //ReadConfiguration("1");
-            //string gg = new Guid("0a75af84-f689-4291-8921-4d5e5e6158ae").ToString("D");
-            ReadConfiguration("5");
+            string gg = new Guid("fc43f1b7-0b68-4538-a7a8-a07877cb8001").ToString("D");
+            //ReadConfiguration("5");
+            ReadConfiguration(gg);
             ListConfigurations = configurationListName();
             cbList.Add("StopIIS");
             cbList.Add("Copy");
@@ -248,11 +249,12 @@ namespace RunBook
                         var configurationFile = XDocument.Load(xmlFilePth);
                         var rootConfigurations = configurationFile.Descendants("Configurations").FirstOrDefault();
                         var newConfigurationNode = new XElement("Configuration");
-                        var newMydataNode = new XElement("Mydata");
+                        
                         newConfigurationNode.Add(new XAttribute("name", NewConfigurationName));
                         newConfigurationNode.Add(new XAttribute("confId",  Guid.NewGuid()));
                         foreach (var node in ListEntries)
                         {
+                            var newMydataNode = new XElement("MyData");
                             var newIdNode = new XElement("Id", node.Id);
                             var newActionNode = new XElement("Action", node.Action);
                             var newServerNode = new XElement("Server", node.Server);
@@ -269,8 +271,9 @@ namespace RunBook
                             newMydataNode.Add(newDescriptionNode);
                             newMydataNode.Add(newSourceFolderPathNode);
                             newMydataNode.Add(newSiteNode);
+                            newConfigurationNode.Add(newMydataNode);
                         }
-                        newConfigurationNode.Add(newMydataNode);
+                        
                         rootConfigurations.Add(newConfigurationNode);
                         rootConfigurations.Save(xmlFilePth);
 
@@ -681,7 +684,7 @@ namespace RunBook
         {
             var configFile = XDocument.Load(xmlFilePth);
             var config = from data in configFile.Descendants("Configuration")
-                         .Where(item => (string)item.Attribute("confId") == id)
+                         .Where(item => ((string)item.Attribute("confId")).CompareTo(id) == 0)
                          .Descendants("MyData")
                          select new
                          {
