@@ -60,6 +60,13 @@ namespace RunBook
         private bool isFormVisible;
         private bool isSaveNameVisible;
 
+
+        ///########################################
+        ///########################################
+        ///######## ViewModel Properties  #########
+        ///########################################
+        ///########################################
+
         private ObservableCollection<string> cbList = new ObservableCollection<string>();
         public ObservableCollection<string> CbList
         {
@@ -106,6 +113,257 @@ namespace RunBook
                 OnPropertyChanged("ListConfigurations");
             }
         }
+
+        public MyData SelectedAction
+        {
+            get
+            {
+                return selectedAction;
+            }
+
+            set
+            {
+                selectedAction = value;
+                OnPropertyChanged("SelectedAction");
+            }
+        }
+
+        public string Action
+        {
+            get
+            {
+                return action;
+            }
+
+            set
+            {
+                action = value;
+                OnPropertyChanged("Action");
+            }
+        }
+
+        public string Server
+        {
+            get
+            {
+                return server;
+            }
+
+            set
+            {
+                server = value;
+                OnPropertyChanged("Server");
+            }
+        }
+
+        public string Source
+        {
+            get
+            {
+                return source;
+            }
+
+            set
+            {
+                source = value;
+                OnPropertyChanged("Source");
+            }
+        }
+
+        public string Destination
+        {
+            get
+            {
+                return destination;
+            }
+
+            set
+            {
+                destination = value;
+                OnPropertyChanged("Destination");
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                return description;
+            }
+
+            set
+            {
+                description = value;
+                OnPropertyChanged("Description");
+            }
+        }
+
+        public string Site
+        {
+            get
+            {
+                return site;
+            }
+
+            set
+            {
+                site = value;
+                OnPropertyChanged("Site");
+            }
+        }
+
+        public string SourceFolderPath
+        {
+            get
+            {
+                return sourceFolderPath;
+            }
+
+            set
+            {
+                sourceFolderPath = value;
+                OnPropertyChanged("SourceFolderPath");
+            }
+        }
+
+        public int Id
+        {
+            get
+            {
+                id = ListEntries.Count() + 1;
+                return id;
+            }
+
+            set
+            {
+                id = value;
+                OnPropertyChanged("Id");
+            }
+        }
+
+        public string NewConfigurationName
+        {
+            get
+            {
+                return newConfigurationName;
+            }
+
+            set
+            {
+                newConfigurationName = value;
+                OnPropertyChanged("NewConfigurationName");
+            }
+        }
+
+        public KeyValuePair<string, string> SelectedConfiguration
+        {
+            get
+            {
+                return selectedConfiguration;
+            }
+
+            set
+            {
+                selectedConfiguration = value;
+                OnPropertyChanged("SelectedConfiguration");
+                ReadConfiguration(SelectedConfiguration.Key);
+            }
+        }
+
+        /// <summary>
+        /// Boolean Properties to Control Components visibility
+        /// </summary>
+        public bool IsBtnVisible
+        {
+            get
+            {
+                return isBtnVisible;
+            }
+
+            set
+            {
+                isBtnVisible = value;
+                OnPropertyChanged("IsBtnVisible");
+            }
+        }
+
+        public bool IsBtnAddVisible
+        {
+            get
+            {
+                return isBtnAddVisible;
+            }
+
+            set
+            {
+                isBtnAddVisible = value;
+                OnPropertyChanged("IsBtnAddVisible");
+            }
+        }
+
+        private bool isOpenDialog;
+
+        public bool IsOpenDialog
+        {
+            get
+            {
+                return isOpenDialog;
+            }
+
+            set
+            {
+                isOpenDialog = value;
+                OnPropertyChanged("IsOpenDialog");
+            }
+        }
+
+        public bool IsDetailsVisible
+        {
+            get
+            {
+                return isDetailsVisible;
+            }
+
+            set
+            {
+                isDetailsVisible = value;
+                OnPropertyChanged("IsDetailsVisible");
+            }
+        }
+
+        public bool IsFormVisible
+        {
+            get
+            {
+                return isFormVisible;
+            }
+
+            set
+            {
+                isFormVisible = value;
+                OnPropertyChanged("IsFormVisible");
+            }
+        }
+
+        public bool IsSaveNameVisible
+        {
+            get
+            {
+                return isSaveNameVisible;
+            }
+
+            set
+            {
+                isSaveNameVisible = value;
+                OnPropertyChanged("IsSaveNameVisible");
+            }
+        }
+
+        ///########################################
+        ///########################################
+        ///######## ViewModel Commands  ###########
+        ///########################################
+        ///########################################
 
         private ICommand addEntry;
         public ICommand AddEntry
@@ -308,55 +566,6 @@ namespace RunBook
             }
         }
 
-        //private ICommand persistToXml;
-
-        //public ICommand PersistToXml
-        //{
-        //    get
-        //    {
-        //        if (persistToXml == null)
-        //        {
-        //            persistToXml = new RelayCommand<object>((obj) =>
-        //            {
-        //                SaveFileDialog saveFileDialog = new SaveFileDialog();
-        //                saveFileDialog.Filter = "XML File (*.xml) | *.xml";
-        //                saveFileDialog.DefaultExt = "xml";
-        //                if (saveFileDialog.ShowDialog() == true)
-        //                {
-        //                    XmlSerializer serialiser = new XmlSerializer(ListEntries.GetType());
-        //                    TextWriter Filestream = new StreamWriter(saveFileDialog.FileName);
-        //                    //write to the file
-        //                    serialiser.Serialize(Filestream, ListEntries);
-        //                    // Close the file
-        //                    Filestream.Close();
-        //                }
-
-
-        //            });
-                    
-        //        }
-        //        return persistToXml;
-        //    }
-        //}
-
-        //private ICommand readXmlFile;
-        //public ICommand ReadXmlFile
-        //{
-        //    get
-        //    {
-        //        if (readXmlFile == null)
-        //        {
-        //            readXmlFile = new RelayCommand<object>((obj) =>
-        //            {
-        //                var uploadConfigXml = new OpenFileDialog();
-        //                uploadConfigXml.Filter = "XML Files (*.xml)|*.xml";
-        //                uploadConfigXml.ShowDialog();
-        //            });
-        //        }
-        //                return readXmlFile;
-        //    }
-        //}
-
         private ICommand getSourceFilePath;
         public ICommand GetSourceFilePath
         {
@@ -392,251 +601,6 @@ namespace RunBook
             }
         }
 
-        public MyData SelectedAction
-        {
-            get
-            {
-                return selectedAction;
-            }
-
-            set
-            {
-                selectedAction = value;
-                OnPropertyChanged("SelectedAction");
-            }
-        }
-
-        public string Action
-        {
-            get
-            {
-                return action;
-            }
-
-            set
-            {
-                action = value;
-                OnPropertyChanged("Action");
-            }
-        }
-
-        public string Server
-        {
-            get
-            {
-                return server;
-            }
-
-            set
-            {
-                server = value;
-                OnPropertyChanged("Server");
-            }
-        }
-
-        public string Source
-        {
-            get
-            {
-                return source;
-            }
-
-            set
-            {
-                source = value;
-                OnPropertyChanged("Source");
-            }
-        }
-
-        public string Destination
-        {
-            get
-            {
-                return destination;
-            }
-
-            set
-            {
-                destination = value;
-                OnPropertyChanged("Destination");
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return description;
-            }
-
-            set
-            {
-                description = value;
-                OnPropertyChanged("Description");
-            }
-        }
-
-        public string Site
-        {
-            get
-            {
-                return site;
-            }
-
-            set
-            {
-                site = value;
-                OnPropertyChanged("Site");
-            }
-        }
-
-        public string SourceFolderPath
-        {
-            get
-            {
-                return sourceFolderPath;
-            }
-
-            set
-            {
-                sourceFolderPath = value;
-                OnPropertyChanged("SourceFolderPath");
-            }
-        }
-
-        public int Id
-        {
-            get
-            {
-                id = ListEntries.Count() + 1;
-                //id = listEntries.IndexOf(SelectedAction);
-                return id;
-            }
-
-            set
-            {
-                id = value;
-                OnPropertyChanged("Id");
-            }
-        }
-
-        public bool IsBtnVisible
-        {
-            get
-            {
-                return isBtnVisible;
-            }
-
-            set
-            {
-                isBtnVisible = value;
-                OnPropertyChanged("IsBtnVisible");
-            }
-        }
-
-        public bool IsBtnAddVisible
-        {
-            get
-            {
-                return isBtnAddVisible;
-            }
-
-            set
-            {
-                isBtnAddVisible = value;
-                OnPropertyChanged("IsBtnAddVisible");
-            }
-        }
-
-        private bool isOpenDialog;
-
-        public bool IsOpenDialog
-        {
-            get
-            {
-                return isOpenDialog;
-            }
-
-            set
-            {
-                isOpenDialog = value;
-                OnPropertyChanged("IsOpenDialog");
-            }
-        }
-
-        public bool IsDetailsVisible
-        {
-            get
-            {
-                return isDetailsVisible;
-            }
-
-            set
-            {
-                isDetailsVisible = value;
-                OnPropertyChanged("IsDetailsVisible");
-            }
-        }
-
-        public bool IsFormVisible
-        {
-            get
-            {
-                return isFormVisible;
-            }
-
-            set
-            {
-                isFormVisible = value;
-                OnPropertyChanged("IsFormVisible");
-            }
-        }
-
-        public bool IsSaveNameVisible
-        {
-            get
-            {
-                return isSaveNameVisible;
-            }
-
-            set
-            {
-                isSaveNameVisible = value;
-                OnPropertyChanged("IsSaveNameVisible");
-            }
-        }
-
-        public string NewConfigurationName
-        {
-            get
-            {
-                return newConfigurationName;
-            }
-
-            set
-            {
-                newConfigurationName = value;
-                OnPropertyChanged("NewConfigurationName");
-            }
-        }
-
-        public KeyValuePair<string, string> SelectedConfiguration
-        {
-            get
-            {
-                //ListConfigurations.Clear();
-                //ListConfigurations = ConfigurationListName();
-                return selectedConfiguration;
-            }
-
-            set
-            {
-                selectedConfiguration = value;
-                OnPropertyChanged("SelectedConfiguration");
-                ReadConfiguration(SelectedConfiguration.Key);
-            }
-        }
-
         ///########################################
         ///########################################
         ///######## Methods internally used #######
@@ -654,25 +618,6 @@ namespace RunBook
                 item.Id = ++i;
             }
         }
-
-        ///// <summary>
-        ///// Method to load the configuration file from
-        ///// an XML file and bind it to the datagrid
-        ///// </summary>
-        ///// <param name="path"></param>
-        //private void LoadXmlConfig(string path)
-        //{
-        //    XmlSerializer serialiser = new XmlSerializer(ListEntries.GetType());
-        //    // Create a new file stream for reading the XML file
-        //    FileStream ReadFileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-
-        //    // Load the object saved above by using the Deserialize function
-        //    var LoadedConfig = (ObservableCollection<MyData>)serialiser.Deserialize(ReadFileStream);
-        //    ListEntries = LoadedConfig;
-        //    // Cleanup
-        //    ReadFileStream.Close();
-        //}
-
 
         /// <summary>
         /// Read a configuration from the XML Configuration File
@@ -712,17 +657,6 @@ namespace RunBook
                 };
                 ListEntries.Add(dataConfig);
             }
-        }
-
-        /// <summary>
-        /// Return the number of saved configurations
-        /// </summary>
-        /// <returns></returns>
-        private int ConfigurationListCount()
-        {
-            var configFile = XDocument.Load(xmlFilePth);
-            return configFile.Descendants("Configuration").Count();
-
         }
 
         /// <summary>
