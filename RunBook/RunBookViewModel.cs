@@ -26,18 +26,16 @@ namespace RunBook
             //xmlFilePth = @"..\..\XmlConfigurations\Configurations.xml";
             //Modify file in debug
             xmlFilePth = @"XmlConfigurations\Configurations.xml";
-            //ReadConfiguration("1");
-            string gg = new Guid("fc43f1b7-0b68-4538-a7a8-a07877cb8001").ToString("D");
-            //ReadConfiguration("5");
-            ReadConfiguration(gg);
-            ListConfigurations = configurationListName();
+            
+            ListConfigurations = ConfigurationListName();
             cbList.Add("StopIIS");
             cbList.Add("Copy");
             cbList.Add("Execute Sql");
             cbList.Add("Execute Cmd");
             //Default selected configuration
-            SelectedConfiguration = ListConfigurations[0];
-            
+            SelectedConfiguration = ListConfigurations.FirstOrDefault();
+            ReadConfiguration(SelectedConfiguration.Key);
+
         }
         // Write value if a field value is null or empty
         public static string EmptyField = "Empty Field";
@@ -53,7 +51,7 @@ namespace RunBook
         private string description;
         private string site;
         private MyData selectedAction;
-        private string selectedConfiguration;
+        private KeyValuePair<string,string> selectedConfiguration;
         private string newConfigurationName;
         //boolean variables to controls visibility
         private bool isBtnVisible;
@@ -94,8 +92,8 @@ namespace RunBook
             }
         }
 
-        private ObservableCollection<string> listConfigurations = new ObservableCollection<string>();
-        public ObservableCollection<string> ListConfigurations
+        private ObservableCollection<KeyValuePair<string, string>> listConfigurations = new ObservableCollection<KeyValuePair<string, string>>();
+        public ObservableCollection<KeyValuePair<string, string>> ListConfigurations
         {
             get
             {
@@ -279,10 +277,11 @@ namespace RunBook
 
                         //Arrange the view
                         ListConfigurations.Clear();
-                        ListConfigurations = configurationListName();
+                        ListConfigurations = ConfigurationListName();
                         SelectedConfiguration = ListConfigurations.Last();
                         IsOpenDialog = false;
                         IsSaveNameVisible = false;
+                        NewConfigurationName = "";
                     });
                 }
                 return saveConfiguration;
@@ -302,6 +301,7 @@ namespace RunBook
                         IsSaveNameVisible = true;
                         IsFormVisible = false;
                         isDetailsVisible = false; 
+                        
                     });
                 }
             return openSaveDialog;
@@ -620,14 +620,12 @@ namespace RunBook
             }
         }
 
-        public string SelectedConfiguration
+        public KeyValuePair<string, string> SelectedConfiguration
         {
             get
             {
-                //if (selectedConfiguration != null)
-                //{
-                //    ReadConfiguration("9c1c11ab-e0f4-4662-b38e-c52c7fe6df82");
-                //}
+                //ListConfigurations.Clear();
+                //ListConfigurations = ConfigurationListName();
                 return selectedConfiguration;
             }
 
@@ -635,6 +633,7 @@ namespace RunBook
             {
                 selectedConfiguration = value;
                 OnPropertyChanged("SelectedConfiguration");
+                ReadConfiguration(SelectedConfiguration.Key);
             }
         }
 
@@ -697,6 +696,7 @@ namespace RunBook
                              XmlDescription = data.Element("Description")?.Value,
                              XmlSite = data.Element("Site")?.Value
                          };
+            ListEntries.Clear();
             foreach (var item in config)
             {
                 var dataConfig = new MyData()
@@ -728,19 +728,20 @@ namespace RunBook
         /// <summary>
         /// Read Configurations name to bind with the comboBox
         /// </summary>
-        private ObservableCollection<string> configurationListName()
+        private ObservableCollection<KeyValuePair<string, string>> ConfigurationListName()
         {
             var configFile = XDocument.Load(xmlFilePth);
             var confList = from configurations in configFile.Descendants("Configuration")
                            select new
                            {
-                               Name = configurations.Attribute("name")?.Value
+                               Name = configurations.Attribute("name")?.Value,
+                               KeyConf = configurations.Attribute("confId")?.Value
                            };
             foreach (var item in confList)
             {
-                ListConfigurations.Add(item.Name);
+                ListConfigurations.Add(new KeyValuePair<string,string>(item.KeyConf,item.Name));
             }
-            return listConfigurations;
+            return ListConfigurations;
         }
 
     }

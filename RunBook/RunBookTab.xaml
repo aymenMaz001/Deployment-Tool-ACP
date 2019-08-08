@@ -45,7 +45,9 @@
                                 <Label x:Name="lblConfig" Content="Configuration: " Height="34" Width="282" FontFamily="Calibri" FontSize="16"/>
                                 <ComboBox x:Name="cbConfiguration" Width="185" Margin="0,18,0,21" 
                                           Height="31" FontFamily="Calibri" FontSize="14" 
-                                          ItemsSource="{Binding ListConfigurations,Mode=TwoWay}"
+                                          ItemsSource="{Binding Path=ListConfigurations,Mode=TwoWay}"
+                                          SelectedValuePath="Key"
+                                          DisplayMemberPath="Value"
                                           SelectedItem="{Binding SelectedConfiguration}"
                                            />
                             </StackPanel>
