@@ -34,6 +34,9 @@ namespace RunBook
             cbList.Add("Execute Cmd");
             //Default selected configuration
             SelectedConfiguration = ListConfigurations.FirstOrDefault();
+
+            var configurationFile = XDocument.Load(xmlFilePth);
+            //SelectedConfiguration.Key = configurationFile.Descendants("Configuration").FirstOrDefault().Attribute("confId").Value;
             ReadConfiguration(SelectedConfiguration.Key);
 
         }
@@ -51,7 +54,8 @@ namespace RunBook
         private string description;
         private string site;
         private MyData selectedAction;
-        private KeyValuePair<string,string> selectedConfiguration;
+        //private KeyValuePair<string,string> selectedConfiguration = new KeyValuePair<string, string>();
+        private KeyValueData selectedConfiguration = new KeyValueData();
         private string newConfigurationName;
         //boolean variables to controls visibility
         private bool isBtnVisible;
@@ -99,8 +103,8 @@ namespace RunBook
             }
         }
 
-        private ObservableCollection<KeyValuePair<string, string>> listConfigurations = new ObservableCollection<KeyValuePair<string, string>>();
-        public ObservableCollection<KeyValuePair<string, string>> ListConfigurations
+        private ObservableCollection<KeyValueData> listConfigurations = new ObservableCollection<KeyValueData>();
+        public ObservableCollection<KeyValueData> ListConfigurations
         {
             get
             {
@@ -255,18 +259,22 @@ namespace RunBook
             }
         }
 
-        public KeyValuePair<string, string> SelectedConfiguration
+        public KeyValueData SelectedConfiguration
         {
             get
             {
                 return selectedConfiguration;
+
             }
 
             set
             {
-                selectedConfiguration = value;
-                OnPropertyChanged("SelectedConfiguration");
-                ReadConfiguration(SelectedConfiguration.Key);
+                if (value != null)
+                {
+                    selectedConfiguration = value;
+                    OnPropertyChanged("SelectedConfiguration");
+                    ReadConfiguration(SelectedConfiguration.Key);
+                }
             }
         }
 
@@ -601,6 +609,29 @@ namespace RunBook
             }
         }
 
+        private ICommand deleteConfiguration;
+        public ICommand DeleteConfiguration
+            {
+            get
+            {
+                if (deleteConfiguration == null)
+                {
+                    deleteConfiguration = new RelayCommand<object>((obj) =>
+                    {
+                        ListConfigurations.Remove(ListConfigurations.FirstOrDefault((item) => item.Key == selectedConfiguration.Key));
+                        //Rearrange the combobox
+                        var configurationFile = XDocument.Load(xmlFilePth);
+                        configurationFile.Descendants("Configuration").FirstOrDefault(item => item.Attribute("confId").Value.ToString() == SelectedConfiguration.Key).Remove();
+                        configurationFile.Save(xmlFilePth);
+                        ListConfigurations.Clear();
+                        ListConfigurations = ConfigurationListName();
+                        SelectedConfiguration = ListConfigurations.FirstOrDefault();
+                    });
+                }
+                return deleteConfiguration;
+            }
+        }
+
         ///########################################
         ///########################################
         ///######## Methods internally used #######
@@ -662,7 +693,7 @@ namespace RunBook
         /// <summary>
         /// Read Configurations name to bind with the comboBox
         /// </summary>
-        private ObservableCollection<KeyValuePair<string, string>> ConfigurationListName()
+        private ObservableCollection<KeyValueData> ConfigurationListName()
         {
             var configFile = XDocument.Load(xmlFilePth);
             var confList = from configurations in configFile.Descendants("Configuration")
@@ -673,7 +704,7 @@ namespace RunBook
                            };
             foreach (var item in confList)
             {
-                ListConfigurations.Add(new KeyValuePair<string,string>(item.KeyConf,item.Name));
+                ListConfigurations.Add(new KeyValueData(item.KeyConf, item.Name));
             }
             return ListConfigurations;
         }

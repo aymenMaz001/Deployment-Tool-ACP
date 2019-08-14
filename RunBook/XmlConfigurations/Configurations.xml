@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ArrayOfMyData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Configurations>
-    <Configuration name="Default Config" confId="1">
-      <MyData>
+<Configurations>
+  <Configuration name="Default Config" confId="0a75af84-f689-4291-8921-4d5e5e6158ae">
+    <MyData>
       <Id>1</Id>
       <Action>StopIIS</Action>
       <Server>192.168.2.152</Server>
@@ -52,6 +51,79 @@
       <SourceFolderPath />
       <Site />
     </MyData>
-      </Configuration>
-   </Configurations>
-</ArrayOfMyData>
+  </Configuration>
+  <Configuration name="new Configuration" confId="fc43f1b7-0b68-4538-a7a8-a07877cb8001">
+    <MyData>
+      <Id>1</Id>
+      <Action>StopIIS</Action>
+      <Server>192.168.2.152</Server>
+      <Source></Source>
+      <Destination></Destination>
+      <Description></Description>
+      <SourceFolderPath></SourceFolderPath>
+      <Site>All</Site>
+    </MyData>
+    <MyData>
+      <Id>2</Id>
+      <Action>Copy</Action>
+      <Server>192.168.2.152</Server>
+      <Source>axeDispatchField.xml</Source>
+      <Destination>\Reports</Destination>
+      <Description></Description>
+      <SourceFolderPath>\delivery*\00- Application\ACP\AxeConfig\</SourceFolderPath>
+      <Site>AxeCreditPortal</Site>
+    </MyData>
+    <MyData>
+      <Id>3</Id>
+      <Action>Execute</Action>
+      <Server>192.168.2.152</Server>
+      <Source>DocGen.docx</Source>
+      <Destination>Axe_Credit</Destination>
+      <Description></Description>
+      <SourceFolderPath></SourceFolderPath>
+      <Site></Site>
+    </MyData>
+  </Configuration>
+  <Configuration name="anotherConfig" confId="cf2ed1fd-8808-4eff-bdef-d8940462d342">
+    <MyData>
+      <Id>1</Id>
+      <Action>StopIIS</Action>
+      <Server>192.168.2.152</Server>
+      <Source></Source>
+      <Destination></Destination>
+      <Description></Description>
+      <SourceFolderPath></SourceFolderPath>
+      <Site>All</Site>
+    </MyData>
+    <MyData>
+      <Id>2</Id>
+      <Action>Copy</Action>
+      <Server>192.168.2.152</Server>
+      <Source>axeDispatchField.xml</Source>
+      <Destination>\Reports</Destination>
+      <Description></Description>
+      <SourceFolderPath>\delivery*\00- Application\ACP\AxeConfig\</SourceFolderPath>
+      <Site>AxeCreditPortal</Site>
+    </MyData>
+    <MyData>
+      <Id>3</Id>
+      <Action>Execute</Action>
+      <Server>192.168.2.152</Server>
+      <Source>DocGen.docx</Source>
+      <Destination>\Reports</Destination>
+      <Description>Executing DB scripts</Description>
+      <SourceFolderPath>\delivery*\01- DB\</SourceFolderPath>
+      <Site></Site>
+    </MyData>
+    <MyData>
+      <Id>4</Id>
+      <Action>Execute</Action>
+      <Server>192.168.2.152</Server>
+      <Source>DocGen.docx</Source>
+      <Destination>Axe_Credit</Destination>
+      <Description></Description>
+      <SourceFolderPath></SourceFolderPath>
+      <Site></Site>
+    </MyData>
+  </Configuration>
+</Configurations>
