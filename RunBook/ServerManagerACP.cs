@@ -1,16 +1,37 @@
 ﻿using Microsoft.Web.Administration;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerManagerTest
+namespace RunBook
 {
-    public class AddWebSite
+    public class ServerManagerACP
     {
-        public void Add(ServerManager server,String name,string ip,string port, string hostName,string poolName)
+        public void StartServer(ServerManager serverManager, String name)
+        {
+            var site = serverManager.Sites.FirstOrDefault(s => s.Name == name);
+            if (site != null)
+            {
+                site.Start();
+                Console.WriteLine("The Server Has been started");
+            }
+            Console.ReadLine();
+        }
+
+        public void StopServer(ServerManager serverManager, String name)
+        {
+            var site = serverManager.Sites.FirstOrDefault(s => s.Name == name);
+            if (site != null)
+            {
+                site.Stop();
+                Console.WriteLine("The Server Has been stopped");
+            }
+            Console.ReadLine();
+        }
+
+        public void Add(ServerManager server,string sitePath, String name, string ip, string port, string hostName, string poolName)
         {
 
             if (server.Sites != null && server.Sites.Count > 0)
@@ -19,12 +40,8 @@ namespace ServerManagerTest
                 if (server.Sites.FirstOrDefault(s => s.Name == name) == null)
                 {
                     //we will just pick an arbitrary location for the site
-                    string path = @"c:\TestServer\";
-
-                    //we must specify the Binding information
-                    //string ip = "*";
-                    //string port = "8000";
-                    //string hostName = "*";
+                    //string path = @"c:\TestServer\";
+                    string path = sitePath;
 
                     string bindingInfo = string.Format(@"{0}:{1}:{2}", ip, port, hostName);
 

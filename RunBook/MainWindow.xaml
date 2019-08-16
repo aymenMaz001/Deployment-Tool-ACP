@@ -12,7 +12,7 @@
         Title="ACP Deployment Tool" Height="680" Width="990" SizeToContent="WidthAndHeight" ShowInTaskbar="False">
 
     <Window.DataContext>
-        <VM:RunBookViewModel></VM:RunBookViewModel>
+        <VM:RunBookViewModel />
     </Window.DataContext>
     <Window.Resources>
         

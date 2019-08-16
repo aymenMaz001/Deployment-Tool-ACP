@@ -1,10 +1,14 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.SqlServer.Management.Common;
+using Microsoft.SqlServer.Management.Smo;
+using Microsoft.Web.Administration;
+using Microsoft.Win32;
 using RunBook;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -586,7 +590,11 @@ namespace RunBook
                         var getSourceFilePath = new OpenFileDialog();
                         getSourceFilePath.ShowDialog();
                         Source = getSourceFilePath.FileName;
-                        SourceFolderPath = Path.GetDirectoryName(Source);
+                        if (!string.IsNullOrEmpty(Source))
+                        {
+                            SourceFolderPath = Path.GetDirectoryName(Source);
+                        }
+                        
                     });
                 }
                 return getSourceFilePath;
@@ -629,6 +637,23 @@ namespace RunBook
                     });
                 }
                 return deleteConfiguration;
+            }
+        }
+
+        private ICommand executeConfiguration;
+
+        public ICommand ExecuteConfiguration
+        {
+            get
+            {
+                if (executeConfiguration == null)
+                {
+                    executeConfiguration = new RelayCommand<object>((obj) =>
+                    {
+                        DoConfigurationAction(ListEntries);
+                    });
+                }
+            return executeConfiguration;
             }
         }
 
@@ -709,5 +734,45 @@ namespace RunBook
             return ListConfigurations;
         }
 
+        private void DoConfigurationAction(ObservableCollection<MyData> listEntries)
+        {
+            foreach (var item in listEntries)
+            {
+                switch (item.Action)
+                {
+                    case "StopIIS":
+                        var server = new ServerManagerACP();
+                        //var serverManager = new ServerManager();
+                        ServerManager serverManager = ServerManager.OpenRemote("localhost");
+                        var siteName = "ACPTestServer";
+                        server.StopServer(serverManager,siteName);
+                        break;
+                    case "Copy":
+                        var fileName = "Configurations.xml";
+                        var sourcePath = Path.Combine(@"C:\Users\Aymen\Desktop\",fileName);//Path.Combine(item.SourceFolderPath,item.Source);
+                        var destinationPath = Path.Combine(@"C:\ACPTestServer\",fileName);// item.Destination;
+                        File.Copy(sourcePath, destinationPath,true);
+                        break;
+                    case "Sql":
+                        string sqlConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;" +
+                                                        "Initial Catalog=ACPSQLTestServer;" +
+                                                        "Integrated Security=True";
+                        FileInfo file = new FileInfo("");// ("C:\\myscript.sql");
+
+                        string script = file.OpenText().ReadToEnd();
+
+                        SqlConnection conn = new SqlConnection(sqlConnectionString);
+
+                        Server serverSql = new Server(new ServerConnection(conn));
+
+                        serverSql.ConnectionContext.ExecuteNonQuery(script);
+                        break;
+                    case "Cmd":
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 }

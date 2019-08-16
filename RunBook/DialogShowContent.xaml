@@ -35,11 +35,19 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,20">
                 <TextBlock Text="Server:" Width="280" FontFamily="Calibri" FontSize="16" />
-                <TextBox materialDesign:HintAssist.Hint="Server Adress" Name="txtServer" Grid.Row="0" Grid.Column="1" Width="165" Text="{Binding Server,Mode=TwoWay}">
 
-                    <behaviors:Interaction.Behaviors>
+                <TextBox materialDesign:HintAssist.Hint="Server Adress" Name="txtServer" Grid.Row="0" Grid.Column="1" Width="165" Text="{Binding Server,Mode=TwoWay}">
+                    <!--<TextBox.Text>
+                        <Binding Path="Server" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <local:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>-->
+                    
+                    <!--<behaviors:Interaction.Behaviors>
                         <controlzEx:TextBoxInputMaskBehavior InputMask="999.999.999.999" PromptChar="_" />
-                    </behaviors:Interaction.Behaviors>
+                    </behaviors:Interaction.Behaviors>-->
                 </TextBox>
             </StackPanel>
 

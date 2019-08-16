@@ -22,9 +22,9 @@ namespace RunBook
         /// </summary>
         public TreeViewFileSystemViewModel()
         {
-            var path = @"C:\Release5.0";
+            //var path = @"C:\Release5.0";
             ////var path = @"C:\Users\Aymen\Desktop\Esprit\3B";
-            DirectoryItems = GetItems(path);
+            //DirectoryItems = GetItems(path);
             //Text = "Path: " + path;
         }
 

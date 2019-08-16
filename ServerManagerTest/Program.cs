@@ -18,6 +18,11 @@ namespace ServerManagerTest
             StartStopServer server = new StartStopServer();
             AddWebSite site = new AddWebSite();
             AppPoolWithSite pool = new AppPoolWithSite();
+            Console.WriteLine("Domain Name is : ");
+            Console.WriteLine(System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName);
+            Console.WriteLine(System.Environment.UserDomainName);
+            Console.WriteLine(System.Environment.UserName);
+            Console.ReadLine();
 
             // Start the server
             //server.StartServerTest(serverManager, "Default Web Site"); 
@@ -26,7 +31,7 @@ namespace ServerManagerTest
             //pool.AddPoolSite(serverManager,"poolTest");
 
             //Add a WebSite
-            //site.Add(serverManager,"TestAdd1");
+            //site.Add(serverManager,"TestAdd1","*","8545","*","DefaultAppPool");
 
             //Stop the server
             //server.StopServerTest(serverManager, "Default Web Site");

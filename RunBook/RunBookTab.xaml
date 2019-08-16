@@ -130,6 +130,7 @@
                     <!--<Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding SaveConfiguration}" Width="100" FontSize="12" Margin="0" Height="25" Content="Save New Configuration" />-->
                     <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding DeleteConfiguration}" Width="170" FontSize="12" Margin="0,0,30,0" Height="25" Content="Delete Configuration" />
                     <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding OpenSaveDialog}" Width="170" FontSize="12" Margin="0" Height="25" Content="Save New Configuration" />
+                    <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding ExecuteConfiguration}" Width="170" FontSize="12" Margin="30,0,0,0" Height="25" Content="Execute Configuration" />
                 </StackPanel>
                 <!--If SystemFile is Selected-->
                 <!--<StackPanel Orientation="Horizontal" Margin="10,0,0,0">
