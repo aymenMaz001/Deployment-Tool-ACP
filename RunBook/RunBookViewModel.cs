@@ -33,6 +33,7 @@ namespace RunBook
             
             ListConfigurations = ConfigurationListName();
             cbList.Add("StopIIS");
+            //cbList.Add("StartIIS");
             cbList.Add("Copy");
             cbList.Add("Execute Sql");
             cbList.Add("Execute Cmd");
@@ -551,6 +552,7 @@ namespace RunBook
                         SelectedConfiguration = ListConfigurations.Last();
                         IsOpenDialog = false;
                         IsSaveNameVisible = false;
+                        IsDetailsVisible = false;
                         NewConfigurationName = "";
                     });
                 }
@@ -570,8 +572,7 @@ namespace RunBook
                         IsOpenDialog = true;
                         IsSaveNameVisible = true;
                         IsFormVisible = false;
-                        isDetailsVisible = false; 
-                        
+                        IsDetailsVisible = false;
                     });
                 }
             return openSaveDialog;
@@ -746,6 +747,14 @@ namespace RunBook
                         ServerManager serverManager = ServerManager.OpenRemote("localhost");
                         var siteName = "ACPTestServer";
                         server.StopServer(serverManager,siteName);
+                        serverManager.Dispose();
+                        break;
+                    case "StartIIS":
+                        var serverACP = new ServerManagerACP();
+                        ServerManager serverManagerStart = ServerManager.OpenRemote("localhost");
+                        var siteName1 = "test";
+                        serverACP.StartServer(serverManagerStart, siteName1);
+                        serverManagerStart.Dispose();
                         break;
                     case "Copy":
                         var fileName = "Configurations.xml";

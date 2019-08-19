@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deployment Tool", "Deployment Tool\Deployment Tool.csproj", "{8C4E62F6-2869-473C-BD3D-C3B1220CC3FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerManagerTest", "ServerManagerTest\ServerManagerTest.csproj", "{6890B934-4F6F-4226-8648-FEF3FABD9540}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HierarchyGenerator", "HierarchyGenerator\HierarchyGenerator.csproj", "{18C6D783-72C4-4CFF-A288-5CA838A58BD0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunBook", "RunBook\RunBook.csproj", "{778B3F68-B759-4712-9F95-14EE136D3F45}"
 EndProject
@@ -55,22 +53,6 @@ Global
 		{6890B934-4F6F-4226-8648-FEF3FABD9540}.Release|x64.Build.0 = Release|Any CPU
 		{6890B934-4F6F-4226-8648-FEF3FABD9540}.Release|x86.ActiveCfg = Release|Any CPU
 		{6890B934-4F6F-4226-8648-FEF3FABD9540}.Release|x86.Build.0 = Release|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Debug|ARM.Build.0 = Debug|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Debug|x64.Build.0 = Debug|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Debug|x86.Build.0 = Debug|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Release|ARM.ActiveCfg = Release|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Release|ARM.Build.0 = Release|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Release|x64.ActiveCfg = Release|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Release|x64.Build.0 = Release|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Release|x86.ActiveCfg = Release|Any CPU
-		{18C6D783-72C4-4CFF-A288-5CA838A58BD0}.Release|x86.Build.0 = Release|Any CPU
 		{778B3F68-B759-4712-9F95-14EE136D3F45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{778B3F68-B759-4712-9F95-14EE136D3F45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{778B3F68-B759-4712-9F95-14EE136D3F45}.Debug|ARM.ActiveCfg = Debug|Any CPU
